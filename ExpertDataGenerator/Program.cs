@@ -46,13 +46,11 @@ namespace ExpertDataGenerator
 
 
             var train = new StringBuilder();
-            var test = new StringBuilder();
             var headers = excelData[0];
             train.AppendLine(string.Join(",", headers));
-            test.AppendLine(string.Join(",", headers));
 
             var enableMutations = false;
-            var limit = 100000;
+            var limit = 50000;
             var random = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < limit ; i++)
             {
@@ -67,11 +65,8 @@ namespace ExpertDataGenerator
                     elem[new Random((int)DateTime.Now.Ticks).Next(elem.Count()-1)] = "1";
                 }
 
+                train.AppendLine(string.Join(",",elem));
 
-                if(i<limit*0.8)
-                    train.AppendLine(string.Join(",",elem));
-                else
-                    test.AppendLine(string.Join(",", elem));
                 
             }
 
@@ -82,7 +77,6 @@ namespace ExpertDataGenerator
            
 
             File.WriteAllText(@"..\..\..\..\CarExpert.App\CarExpert.App\train.csv", train.ToString());
-            File.WriteAllText(@"..\..\..\..\CarExpert.App\CarExpert.App\test.csv", test.ToString());
             File.WriteAllText(@"..\..\..\headers.txt", string.Join(",",exportHeaders));
             File.WriteAllText(@"..\..\..\diagnosis.txt", string.Join(",", exportDiagnosis));
 

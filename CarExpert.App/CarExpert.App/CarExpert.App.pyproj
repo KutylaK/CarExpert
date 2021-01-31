@@ -24,7 +24,6 @@
     <Compile Include="CarExpert.App.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="test.csv" />
     <Content Include="train.csv" />
     <Content Include="tree.png" />
   </ItemGroup>
