@@ -1,9 +1,12 @@
-
-
 from tkinter import *
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
 
 l1=[
 'rozrusznik nie kręci','światła się nie palą','opona łysa z jednej strony','samochód stał na mrozie','brak powietrza w kole','niski poziom oleju','biegi nie chcą się zmieniać','sprzęgło lekko się wciska','samochód zjeżdza z górki','głośny silnik','stuknięcia na górkach I dołkach','słaba siła hamowania','słaba siła silnika','wieksze zuzycie paliwa','miękki pedał hamulca','spryskiwacze nie działaja','wysoka temperatura silnika','samochód gaśnie'
@@ -13,99 +16,53 @@ disease=[
 'rozładowany akumulator','zepsuty rozrząd','zapowietrzone hamulce','przepalona żarówka','zła rozbieżność kół','słaby hamulec ręczny','brak płynu do spryskiwaczy','zamarznięty płyn do spryskiwaczy','przepalony bezpiecznik','dziurawe koło','peknięta miska olejowa','zepsuta skrzynia biegów','zepsute sprzęgło','zużyty filtr powietrza','awaria chłodnicy','brak benzyny'
 ]
 
+dataset = pd.read_csv("train.csv")
+X = dataset.drop('diagnoza', axis=1)
+y = dataset['diagnoza']
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
 
+classifier = tree.DecisionTreeClassifier(criterion="entropy", max_depth=10)
+classifier = classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
 
-df=pd.read_csv("train.csv")
-
-i = 0;
-
-replacor = {}
-
-for d in disease:
-    replacor[d] = i
-    i+=1
-
-
-
-df.replace({'diagnoza':
-            replacor
-            },inplace=True)
-
-
-X= df[l1]
-
-y = df[["diagnoza"]]
-np.ravel(y)
-
-
-
-tr=pd.read_csv("test.csv")
-tr.replace({'diagnoza': replacor},inplace=True)
-
-X_test= tr[l1]
-y_test = tr[["diagnoza"]]
-np.ravel(y_test)
-
-
-
-from sklearn import tree
-from sklearn.metrics import accuracy_score
-clf = tree.DecisionTreeClassifier(criterion="entropy")   
-clf = clf.fit(X,y)
-y_pred=clf.predict(X_test)
-from sklearn.metrics import classification_report, confusion_matrix
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-text_representation = tree.export_text(clf)
-print(text_representation)
-fig = plt.figure(figsize=(35,30))
-_ = tree.plot_tree(clf, feature_names=l1, filled=True)
-
+fig = plt.figure(figsize=(35, 30))
+_ = tree.plot_tree(classifier, feature_names=l1, filled=True)
 plt.savefig('tree.png', bbox_inches='tight')
 
-def PredykcjaDrzewem():
+classifier_rf = RandomForestClassifier()
+classifier_rf = classifier_rf.fit(X_train, y_train)
 
 
-    l2=[]
-    for x in range(0,len(l1)):
-        l2.append(0)
+def drzewo():
+    predict = classifier.predict(x_values())
+    t1.insert(END, predict[0])
 
+
+def las_losowy():
+    predict = classifier_rf.predict(x_values())
+    t1.insert(END, predict[0])
+
+
+def x_values():
+    l2 = [0] * len(l1)
     t1.delete("1.0", END)
 
+    x_values = [Symptom1.get(), Symptom2.get(), Symptom3.get()]
 
-    psymptoms = [Symptom1.get(),Symptom2.get(),Symptom3.get()]
-
-    for k in range(0,len(l1)):
-        # print (k,)
-        for z in psymptoms:
-            if(z==l1[k]):
-                l2[k]=1
-
-    inputtest = [l2]
-    predict = clf.predict(inputtest)
-    predicted=predict[0]
-
-    h='no'
-    for a in range(0,len(disease)):
-        if(predicted == a):
-            h='yes'
-            break
-
-
-    if (h=='yes'):
-        t1.insert(END, disease[a])
-    else:
-        t1.insert(END, "Not Found")
-
-
+    for k in range(0, len(l1)):
+        for z in x_values:
+            if z == l1[k]:
+                l2[k] = 1
+    return [l2]
 
 
 root = Tk()
 root.configure(background='gray')
 
-# entry variables
 Symptom1 = StringVar()
 Symptom1.set(None)
 Symptom2 = StringVar()
@@ -114,9 +71,9 @@ Symptom3 = StringVar()
 Symptom3.set(None)
 
 
-# Heading
+
 w2 = Label(root, justify=CENTER, text="System ekspercki - Mechanik", fg="white", bg="gray")
-#w2.config(font=("Elephant", 30))
+
 w2.grid(row=1, column=0, columnspan=2, padx=100)
 
 S1Lb = Label(root, text="Objaw 1", fg="yellow", bg="black")
@@ -146,11 +103,10 @@ S3En = OptionMenu(root, Symptom3,*OPTIONS)
 S3En.grid(row=9, column=1)
 
 
-dst = Button(root, text="Zdiagnozuj", command=PredykcjaDrzewem,bg="green",fg="yellow")
+dst = Button(root, text="Zdiagnozuj", command=las_losowy, bg="green", fg="yellow")
 dst.grid(row=8, column=3)
 
 
-#textfileds
 t1 = Text(root, height=1, width=40,bg="orange",fg="black")
 t1.grid(row=15, column=1, padx=10)
 
