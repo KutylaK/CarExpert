@@ -26,6 +26,7 @@
   <ItemGroup>
     <Content Include="test.csv" />
     <Content Include="train.csv" />
+    <Content Include="tree.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -51,7 +51,7 @@ namespace ExpertDataGenerator
             train.AppendLine(string.Join(",", headers));
             test.AppendLine(string.Join(",", headers));
 
-            var enableMutations = true;
+            var enableMutations = false;
             var limit = 100000;
             var random = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < limit ; i++)

@@ -3,6 +3,7 @@
 from tkinter import *
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 l1=[
 'rozrusznik nie kręci','światła się nie palą','opona łysa z jednej strony','samochód stał na mrozie','brak powietrza w kole','niski poziom oleju','biegi nie chcą się zmieniać','sprzęgło lekko się wciska','samochód zjeżdza z górki','głośny silnik','stuknięcia na górkach I dołkach','słaba siła hamowania','słaba siła silnika','wieksze zuzycie paliwa','miękki pedał hamulca','spryskiwacze nie działaja','wysoka temperatura silnika','samochód gaśnie'
@@ -50,11 +51,19 @@ np.ravel(y_test)
 
 from sklearn import tree
 from sklearn.metrics import accuracy_score
-clf3 = tree.DecisionTreeClassifier()   
-clf3 = clf3.fit(X,y)
-y_pred=clf3.predict(X_test)
+clf = tree.DecisionTreeClassifier(criterion="entropy")   
+clf = clf.fit(X,y)
+y_pred=clf.predict(X_test)
 from sklearn.metrics import classification_report, confusion_matrix
+print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
+
+text_representation = tree.export_text(clf)
+print(text_representation)
+fig = plt.figure(figsize=(35,30))
+_ = tree.plot_tree(clf, feature_names=l1, filled=True)
+
+plt.savefig('tree.png', bbox_inches='tight')
 
 def PredykcjaDrzewem():
 
@@ -75,7 +84,7 @@ def PredykcjaDrzewem():
                 l2[k]=1
 
     inputtest = [l2]
-    predict = clf3.predict(inputtest)
+    predict = clf.predict(inputtest)
     predicted=predict[0]
 
     h='no'
@@ -89,6 +98,8 @@ def PredykcjaDrzewem():
         t1.insert(END, disease[a])
     else:
         t1.insert(END, "Not Found")
+
+
 
 
 root = Tk()
