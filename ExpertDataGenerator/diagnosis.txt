@@ -1,0 +1,1 @@
+'rozładowany akumulator zatarty silnik','zepsuty rozrząd','zapowietrzone hamulce','przepalona żarówka','zła rozbieżność kół','słaby hamulec ręczny','brak płynu do spryskiwaczy','zamarznięty płyn do spryskiwaczy','przepalony bezpiecznik','dziurawe koło','peknięta miska olejowa','zepsuta skrzynia biegów','zepsute sprzęgło','zużyty filtr powietrza','awaria chłodnicy'
