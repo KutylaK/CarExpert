@@ -16,7 +16,7 @@ namespace ExpertDataGenerator
             List<List<string>> excelData = new List<List<string>>();
 
             //read the Excel file as byte array
-            byte[] bin = File.ReadAllBytes(@"C:\Users\KutylaK\Desktop\eksperty.xlsx");
+            byte[] bin = File.ReadAllBytes(@"..\..\..\eksperty.xlsx");
 
             
             //create a new Excel package in a memorystream
@@ -45,12 +45,16 @@ namespace ExpertDataGenerator
             }
 
 
-            var sb = new StringBuilder();
+            var train = new StringBuilder();
+            var test = new StringBuilder();
             var headers = excelData[0];
-            sb.AppendLine(string.Join(",", headers));
+            train.AppendLine(string.Join(",", headers));
+            test.AppendLine(string.Join(",", headers));
 
+            var enableMutations = true;
+            var limit = 100000;
             var random = new Random((int)DateTime.Now.Ticks);
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < limit ; i++)
             {
 
                 var elemBase = excelData[random.Next(2,excelData.Count)];
@@ -58,19 +62,29 @@ namespace ExpertDataGenerator
                 elemBase.CopyTo(elem,0);
                 var mutationP = new Random((int)DateTime.Now.Ticks).NextDouble();
 
-                if(mutationP < 0.3)
+                if(mutationP < 0.3 && enableMutations)
                 {
                     elem[new Random((int)DateTime.Now.Ticks).Next(elem.Count()-1)] = "1";
                 }
-                sb.AppendLine(string.Join(",",elem));
+
+
+                if(i<limit*0.8)
+                    train.AppendLine(string.Join(",",elem));
+                else
+                    test.AppendLine(string.Join(",", elem));
+                
             }
 
             var exportHeaders = headers.Take(headers.Count-1).Select(_ => $"'{_}'");
             var exportDiagnosis = excelData.Skip(1).Select(_ => $"'{_.Last()}'");
 
-            File.WriteAllText(@"C:\Users\KutylaK\source\repos\ExpertDataGenerator\ExpertDataGenerator\data.csv", sb.ToString());
-            File.WriteAllText(@"C:\Users\KutylaK\source\repos\ExpertDataGenerator\ExpertDataGenerator\headers.txt", string.Join(",",exportHeaders));
-            File.WriteAllText(@"C:\Users\KutylaK\source\repos\ExpertDataGenerator\ExpertDataGenerator\diagnosis.txt", string.Join(",", exportDiagnosis));
+
+           
+
+            File.WriteAllText(@"..\..\..\..\CarExpert.App\CarExpert.App\train.csv", train.ToString());
+            File.WriteAllText(@"..\..\..\..\CarExpert.App\CarExpert.App\test.csv", test.ToString());
+            File.WriteAllText(@"..\..\..\headers.txt", string.Join(",",exportHeaders));
+            File.WriteAllText(@"..\..\..\diagnosis.txt", string.Join(",", exportDiagnosis));
 
         }
     }
