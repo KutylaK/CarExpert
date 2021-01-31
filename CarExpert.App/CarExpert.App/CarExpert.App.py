@@ -37,7 +37,7 @@ print(classification_report(y_test, y_pred))
 print()
 
 fig = plt.figure(figsize=(35, 30))
-_ = tree.plot_tree(classifier, feature_names=l1, filled=True)
+_ = tree.plot_tree(classifier, feature_names=l1, filled=True, rounded=True)
 plt.savefig('tree.png', bbox_inches='tight')
 
 
@@ -51,6 +51,11 @@ print(confusion_matrix(y_test, y_pred))
 print()
 print(classification_report(y_test, y_pred))
 print()
+
+sampleTree = classifier_rf.estimators_[5]
+fig = plt.figure(figsize=(35, 30))
+_ = tree.plot_tree(sampleTree, feature_names=l1, filled=True, rounded=True)
+plt.savefig('branch.png', bbox_inches='tight')
 
 
 
