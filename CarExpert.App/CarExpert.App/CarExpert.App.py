@@ -18,16 +18,11 @@ l1=[
 'rozrusznik nie kręci','światła się nie palą','samochód stał na mrozie','brak powietrza w kole','niski poziom oleju','biegi nie chcą się zmieniać','sprzęgło lekko się wciska','samochód zjeżdza z górki','głośny silnik','stuknięcia na górkach I dołkach','słaba siła hamowania','słaba siła silnika','wieksze zuzycie paliwa','miękki pedał hamulca','spryskiwacze nie działaja','wysoka temperatura silnika','samochód gaśnie'
 ]
 
-disease=[
-'rozładowany akumulator','zepsuty rozrząd','zapowietrzone hamulce','zła rozbieżność kół','słaby hamulec ręczny','brak płynu do spryskiwaczy','zamarznięty płyn do spryskiwaczy','przepalony bezpiecznik','dziurawe koło','peknięta miska olejowa','zepsuta skrzynia biegów','zepsute sprzęgło','zużyty filtr powietrza','awaria chłodnicy','brak benzyny'
-]
-
 dataset = pd.read_csv("train.csv")
 X = dataset.drop('diagnoza', axis=1)
 y = dataset['diagnoza']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
-
 
 print("Drzewo decyzyjne")
 print()
@@ -43,7 +38,6 @@ print()
 fig = plt.figure(figsize=(35, 30))
 _ = tree.plot_tree(classifier, feature_names=l1, filled=True, rounded=True)
 plt.savefig('tree.png', bbox_inches='tight')
-
 
 print("Las losowy")
 print()
@@ -61,12 +55,11 @@ fig = plt.figure(figsize=(35, 30))
 _ = tree.plot_tree(sampleTree, feature_names=l1, filled=True, rounded=True)
 plt.savefig('branch.png', bbox_inches='tight')
 
-
 print("K-sąsiadów")
 print()
 
-classifier_k =  KNeighborsClassifier(n_neighbors=3)
-classifier_k = classifier_k.fit(X_train,y_train)
+classifier_k = KNeighborsClassifier(n_neighbors=3)
+classifier_k = classifier_k.fit(X_train, y_train)
 y_pred = classifier_k.predict(X_test)
 
 print(confusion_matrix(y_test, y_pred))
@@ -83,10 +76,10 @@ def las_losowy():
     predict = classifier_rf.predict(x_values())
     t1.insert(END, predict[0])
 
+
 def k_sasiadow():
     predict = classifier_k.predict(x_values())
     t1.insert(END, predict[0])
-
 
 
 def x_values():
@@ -98,7 +91,6 @@ def x_values():
     for k in range(0, len(l2)):
         if k in x_values:
             l2[k] = 1
-    print(l2)
     return [l2]
 
 window = Tk()
